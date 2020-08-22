@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<!-- <script src="js/jquery-2.1.3.min.js"></script> -->
+<link rel="stylesheet" href="css/sample.css">
+<title>じゃんけん</title>
+</head>
+<body>
+
+<header>
+  <h1>じゃんけん</h1>
+</header>
+
+<main>
+  <ul>
+    <li class="janken" data-janken=0 >グー</li>
+    <li class="janken" data-janken=1 >チョキ</li>
+    <li class="janken" data-janken=2 >パー</li>
+  </ul>
+  <div class="pcWrapper">
+    <p class="pcJanken">コンピュータの出した手は？</p>
+    <div id="pc_hands"></div>
+  </div>
+  <div>
+    <p class="judgment">結果は？</p>
+    <div id="judgment">まだ勝負してない</p>
+  </div>
+</main>
+
+<footer></footer>
+<script>
+//じゃんけん用のSCRIPTを書いてください
+const jankenArr = {
+  "gu": 0,
+  "choki":1,
+  "pa":2
+}
+
+const resultImage =  ["./img/gu.jpeg", "./img/choki.jpg","./img/pa.jpeg"]
+
+const elements = document.querySelectorAll('.janken')
+for (element of elements){
+  element.addEventListener('click', clickFunc, false)
+}
+
+//クリックされたとき発火する関数
+function clickFunc(event) {
+  const janken = event.target.dataset.janken
+  resultJanken(janken)
+}
+
+
+//じゃんけんの結果表示する関数
+function resultJanken(janken) {
+  //対戦相手(opponent)の手を取得
+  const opponent = Math.floor(Math.random() * 3)
+  //じゃんけんの結果を格納
+  const result = (janken - opponent + 3) % 3
+
+  const imgId = '#pc_hands'
+  const judgmentId = '#judgment'
+
+  const element = document.querySelector(imgId)
+
+  //すでにimgがあった場合opoonentImgを削除
+  if(element.hasChildNodes()){
+    removeImgTag(imgId)
+  }
+
+  //opoonentImgを表示
+  createImgTag(imgId, opponent)
+
+  if(result === 0){
+    replaceText(judgmentId, '引き分け')
+  }else if ( result === 2){
+    replaceText(judgmentId, '勝ち')
+  } else {
+    replaceText(judgmentId, '負け')
+  }
+}
+
+//imgTagを生成する関数
+function createImgTag(selector, num) {
+  const element = document.querySelector(selector)
+  const imgTag = document.createElement('img')
+  imgTag.classList.add('imgClass');
+  imgTag.src = resultImage[num]
+  element.appendChild(imgTag);
+}
+
+//imgTagを除去する関数
+function removeImgTag(selector) {
+  const element = document.querySelector(selector)
+  while (element.firstChild) element.removeChild(element.firstChild);
+}
+
+// textの中身を入れ替える関数
+function replaceText(selector, text) {
+  const element = document.querySelector(selector)
+  element.innerText = text
+}
+</script>
+</body>
+</html>
